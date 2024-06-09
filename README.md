@@ -303,4 +303,176 @@ npm run build
 
 - SASS로 SCSS 코드를 처리
 - nesting, mix-in, extend
-  1. mix-in - css와 scss를 마치 프로그래밍 언어처럼 사용
+
+  1. nesting - 중첩된 css 코드를 사용
+
+     ```
+     <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+     </ul>
+
+     ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 41px;
+      li {
+        background-color: tomato;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 7px;
+        &:hover {
+          opacity: 0.8;
+          a {
+            color: gray;
+          }
+        }
+        a {
+          text-decoration: none;
+          color: white;
+          text-transform: uppercase;
+        }
+      }
+     }
+     ```
+
+  2. @extend - 코드를 class에서 공유해서 사용
+
+     ```
+      <span class="success">It's all good!</span>
+      <span class="warning">Careful!</span>
+      <span class="error">Oh no! Something went wrong!</span>
+
+      %alert {
+        margin: 10px;
+        padding: 10px 20px;
+        border-radius: 10px;
+        border: 1px dashed black;
+      }
+
+      .success {
+        @extend %alert;
+        background-color: green;
+      }
+
+      .warning {
+        @extend %alert;
+        background-color: tomato;
+      }
+
+      .error {
+        @extend %alert;
+        background-color: yellow;
+      }
+     ```
+
+  3. mixins - 코드를 공유하는 동시에 생성할 수 있음, function 사용
+
+     ```
+     body {
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      padding: 60px;
+     }
+
+     @mixin abc($bgColor, $borderColor) {
+      background-color: $bgColor;
+      margin: 10px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: 1px dashed $borderColor;
+     }
+
+     .success {
+      @include abc(green, blue);
+     }
+
+     .warning {
+      @include abc(tomato, white);
+     }
+
+     .error {
+      @include abc(yellow, black);
+     }
+     ```
+
+  4. mixin 에 content를 전달하는 방법 : @content
+
+     ```
+     @mixin abc($bgColor, $borderColor) {
+      background-color: $bgColor;
+      margin: 10px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: 1px dashed $borderColor;
+      @content;
+     }
+     .success {
+      @include abc(green, blue) {
+        font-size: 12px;
+      }
+     }
+     .warning {
+      @include abc(tomato, white) {
+        text-decoration: underline;
+      }
+     }
+     .error {
+      @include abc(yellow, black) {
+        text-transform: uppercase;
+      }
+     }
+     ```
+
+  5. mixin 으로 반응형 화면 만들기
+
+     ```
+     $breakpoint-sm: 480px;
+     $breakpoint-md: 768px;
+     $breakpoint-lg: 1024px;
+     $breakpoint-xl: 1200px;
+
+     @mixin smallDevice {
+       @media screen and (min-width: $breakpoint-sm) {
+         @content;
+       }
+     }
+     @mixin mediumDevice {
+       @media screen and (min-width: $breakpoint-md) {
+         @content;
+       }
+     }
+     @mixin largeDevice {
+       @media screen and (min-width: $breakpoint-lg) {
+         @content;
+       }
+     }
+     @mixin xlDevice {
+       @media screen and (min-width: $breakpoint-xl) {
+         @content;
+       }
+     }
+
+     body {
+       padding: 0;
+       margin: 0;
+       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+         Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+       @include smallDevice() {
+         background-color: blue;
+       }
+       @include mediumDevice() {
+         background-color: red;
+       }
+       @include largeDevice() {
+         background-color: purple;
+       }
+       @include xlDevice() {
+         background-color: pink;
+       }
+     }
+     ```
