@@ -293,3 +293,14 @@
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   }
   ```
+
+### SCSS ,SASS
+
+```sass 설치, 빌드
+npm add -D sass
+npm run build
+```
+
+- SASS로 SCSS 코드를 처리
+- nesting, mix-in, extend
+  1. mix-in - css와 scss를 마치 프로그래밍 언어처럼 사용
